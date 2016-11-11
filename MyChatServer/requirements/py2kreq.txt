@@ -1,0 +1,6 @@
+CherryPy>=5.5.0
+tornado>=4.2.3
+greenlet>=0.4.9
+mock>=2.0.0
+Cython>=0.22.1
+gevent>=1.1.1
