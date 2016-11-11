@@ -448,6 +448,7 @@ class ClientHandler(Thread):
         return lista
     
 class MyChatServer(Thread):
+    @class
     topicList = []
     message = []
     reply = {}
