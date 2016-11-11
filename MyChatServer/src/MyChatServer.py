@@ -61,7 +61,7 @@ class ClientHandler(Thread):
             self.sock.close()
             self.autobreak = 1 
     def subscribe(self, param):
-          try:
+            try:
                 registered = MyChatServer.registerHost[self.userAttempt]
                 print len(param)
                 for k in range(len(param)):
@@ -73,7 +73,7 @@ class ClientHandler(Thread):
                 for k in range(len(param)):
                     try:
                         userList = MyChatServer.subscribed[param[k]]
-                         if not self.userAttempt in userList:
+                        if not self.userAttempt in userList:
                             
                             userList.append(self.userAttempt)
                             # print "printo userlist \r\n"
@@ -92,9 +92,9 @@ class ClientHandler(Thread):
                     # print MyChatServer.subscribed       
             self.__sendMessage("OK" + '\r' + '\n')   
         
-        pass
+            pass
     def unsubscribe(self, param):
-        failure = False
+            failure = False
             try:
                 registered = MyChatServer.registerHost[self.userAttempt]
                 for k in range(len(param)):
@@ -120,7 +120,7 @@ class ClientHandler(Thread):
     #                 print MyChatServer.subscribed       
             self.__sendMessage("OK" + '\r' + '\n') 
                
-        pass
+            pass
         
     def run(self):
         i = 0
@@ -182,100 +182,99 @@ class ClientHandler(Thread):
                 self.lock.notify_all()
     def topic_list(self, param):
         if not len(param) > 0:
-                str1 = "TOPIC_LIST\r\n"
-                if self.login:
-                    with self.lock:
-                        for i in range(len(MyChatServer.topicList)):
-                            checked = ""
-                            
-                            try:
-                                if self.userAttempt in (MyChatServer.subscribed[str(i)]):
-                                    checked = "*"
-                            except:
-                                print""
-                            str1 = str1 + checked + str(i) + " " + MyChatServer.topicList[i] + "\r\n"
-                    str1 = str1 + "\r\n"
-                    # print str1
+            str1 = "TOPIC_LIST\r\n"
+        
+            with self.lock:
+                for i in range(len(MyChatServer.topicList)):
+                    checked = ""
                     
-                    self.__sendMessage(str1)
-                else:
-                    self.__sendMessage("KO" + '\r' + '\n')
-            else:
-                self.__sendMessage("KO" + '\r' + '\n')
+                    try:
+                        if self.userAttempt in (MyChatServer.subscribed[str(i)]):
+                            checked = "*"
+                    except:
+                        print""
+                    str1 = str1 + checked + str(i) + " " + MyChatServer.topicList[i] + "\r\n"
+            str1 = str1 + "\r\n"
+            # print str1
+            
+            self.__sendMessage(str1)
+                
+        else:
+            self.__sendMessage("KO" + '\r' + '\n')
         
      
     def register(self, param):
         occupato = False
-            coppia = (param[0], int(param[1]))
-            with self.lock:
-                for key, value in MyChatServer.registerHost.iteritems():
-                # for i in range(len(MyChatServer.registerHost)):
-                    coppiaLocal = value
-                    if coppiaLocal == coppia:
-                        try:
-                            MyChatServer.registerHost[self.userAttempt]
-                        except:
-                            occupato = True
-                            
-                        break  
-            if occupato:
-                self.__sendMessage("KO" + '\r' + '\n')
-            else:          
-                MyChatServer.registerHost[self.userAttempt] = (param[0], int(param[1]))
-                self.__sendMessage("OK" + '\r' + '\n')
+        coppia = (param[0], int(param[1]))
+        with self.lock:
+            for key, value in MyChatServer.registerHost.iteritems():
+            # for i in range(len(MyChatServer.registerHost)):
+                coppiaLocal = value
+                if coppiaLocal == coppia:
+                    try:
+                        MyChatServer.registerHost[self.userAttempt]
+                    except:
+                        occupato = True
+                        
+                    break  
+        if occupato:
+            self.__sendMessage("KO" + '\r' + '\n')
+        else:          
+            MyChatServer.registerHost[self.userAttempt] = (param[0], int(param[1]))
+            self.__sendMessage("OK" + '\r' + '\n')
         
     def unregister(self, param):
         if not len(param) > 0:
-                try:
-                    with self.lock:
-                        registerHostProvv = MyChatServer.registerHost[self.userAttempt]
-                        del MyChatServer.registerHost[self.userAttempt]
-                except:
-                    self.__sendMessage("KO" + '\r' + '\n')
-                    exit()
-                #################### INIZIO UNSUBSCRIBE ######################
-                failure = False
-                try:
-                    # registered = registerHostProvv
-                    with self.lock:
-                        # param = [i for i in range(len(MyChatServer.topicList))]
-                        for k in range(len(MyChatServer.topicList)):
-                            try:
-                                userList = MyChatServer.subscribed[str(k)]
-                                for i in range(len(userList)):
-                                    if userList[i] == self.userAttempt:
-                                        # print "cancello..." + userList[i]
-                                        del userList[i]
-                                MyChatServer.subscribed[str(k)] = userList
-                                if len(userList) == 0:
-                                    del MyChatServer.subscribed[str(k)]
-                            except:
-                                failure = True
-                                # print"fail remove subscrive..."
-                except:
-                    print ""                
-                ######################FINE UNSUBSCRIBE ##########################
-                
-                self.__sendMessage("OK" + '\r' + '\n')
-            else:
+            try:
+                with self.lock:
+                    registerHostProvv = MyChatServer.registerHost[self.userAttempt]
+                    del MyChatServer.registerHost[self.userAttempt]
+            except:
                 self.__sendMessage("KO" + '\r' + '\n')
+                exit()
+            #################### INIZIO UNSUBSCRIBE ######################
+            failure = False
+            try:
+                # registered = registerHostProvv
+                with self.lock:
+                    # param = [i for i in range(len(MyChatServer.topicList))]
+                    for k in range(len(MyChatServer.topicList)):
+                        try:
+                            userList = MyChatServer.subscribed[str(k)]
+                            for i in range(len(userList)):
+                                if userList[i] == self.userAttempt:
+                                    # print "cancello..." + userList[i]
+                                    del userList[i]
+                            MyChatServer.subscribed[str(k)] = userList
+                            if len(userList) == 0:
+                                del MyChatServer.subscribed[str(k)]
+                        except:
+                            failure = True
+                            # print"fail remove subscrive..."
+            except:
+                print ""                
+            ######################FINE UNSUBSCRIBE ##########################
+            
+            self.__sendMessage("OK" + '\r' + '\n')
+        else:
+            self.__sendMessage("KO" + '\r' + '\n')
               
         
     def getMsg(self, param):
         if len(param) > 1:
                 self.__sendMessage("KO" + '\r' + '\n')
                 exit()
-            IDmsg = param[0]
-            with self.lock:
-                try:
-                    listOfTopic = MyChatServer.message[int(IDmsg)][1]
-                    text = MyChatServer.message[int(IDmsg)][0]
-                except:
-                    self.__sendMessage("KO" + '\r' + '\n')
-                    exit()
-            listOfTopic = " ".join(listOfTopic)
-            response = "MESSAGE " + IDmsg + "\r\n" + "TOPICS " + listOfTopic + "\r\n" + text + "\r\n" + ".\r\n\r\n"
-            self.__sendMessage(response)
+        IDmsg = param[0]
+        with self.lock:
+            try:
+                listOfTopic = MyChatServer.message[int(IDmsg)][1]
+                text = MyChatServer.message[int(IDmsg)][0]
+            except:
+                self.__sendMessage("KO" + '\r' + '\n')
+                exit()
+        listOfTopic = " ".join(listOfTopic)
+        response = "MESSAGE " + IDmsg + "\r\n" + "TOPICS " + listOfTopic + "\r\n" + text + "\r\n" + ".\r\n\r\n"
+        self.__sendMessage(response)
              
     def message(self, param):
         data = ""
@@ -328,34 +327,34 @@ class ClientHandler(Thread):
             param = param[1:]
             Response = "MESSAGES\r\n"
             
-                with self.lock:
-                    topicExists = True
-                    for i in range(len(param)):
-                        try:
-                            # print "provo param di i:"
-                            print param[i]
-                            MyChatServer.topicList[int(param[int(i)])]
-                        except:
-                            topicExists = False
-                            break
-                    if topicExists:
-                        for i in range(int(msgID), len(MyChatServer.message)):
-                            find = False
-                            listOfTopic = MyChatServer.message[i][1]
-                            if len(param) > 0:
-                                for k in range(len(param)):
-                                    if param[k] in listOfTopic:
-                                        find = True
-                                        break
-                                if find == True:
-                                    Response = Response + str(i) + " " + " ".join(listOfTopic) + "\r\n"
-                            else:
+            with self.lock:
+                topicExists = True
+                for i in range(len(param)):
+                    try:
+                        # print "provo param di i:"
+                        print param[i]
+                        MyChatServer.topicList[int(param[int(i)])]
+                    except:
+                        topicExists = False
+                        break
+                if topicExists:
+                    for i in range(int(msgID), len(MyChatServer.message)):
+                        find = False
+                        listOfTopic = MyChatServer.message[i][1]
+                        if len(param) > 0:
+                            for k in range(len(param)):
+                                if param[k] in listOfTopic:
+                                    find = True
+                                    break
+                            if find == True:
                                 Response = Response + str(i) + " " + " ".join(listOfTopic) + "\r\n"
-                        Response = Response + "\r\n"
-                        # print Response
-                        self.__sendMessage(Response)
-                    else:
-                        self.__sendMessage("KO" + '\r' + '\n')
+                        else:
+                            Response = Response + str(i) + " " + " ".join(listOfTopic) + "\r\n"
+                    Response = Response + "\r\n"
+                    # print Response
+                    self.__sendMessage(Response)
+                else:
+                    self.__sendMessage("KO" + '\r' + '\n')
             
     def msgReply(self, param):
         
@@ -448,7 +447,6 @@ class ClientHandler(Thread):
         return lista
     
 class MyChatServer(Thread):
-    @class
     topicList = []
     message = []
     reply = {}
@@ -496,7 +494,7 @@ class MyChatServer(Thread):
         nReply = len(MyChatServer.reply[msgId]) - 1
 #         msgIndex = len(MyChatServer.message)-1
 #         MyChatServer.message[msgIndex].append(param)
-          print MyChatServer.reply
+        #print MyChatServer.reply
         
         return nReply
     @classmethod

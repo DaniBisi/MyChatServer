@@ -41,7 +41,7 @@ class Test(unittest.TestCase):
     def TestUser(self):
         
         self.clientSocket = socket.socket(AF_INET,SOCK_STREAM)
-        self.MyServer = MyChatServer(self.Dizionario,self.address , self.port)
+        self.MyServer = MyChatServer.MyChatServer(self.Dizionario,self.address , self.port)
         self.MyServer.start()
         self.clientSocket.connect((self.address , self.port))
         msg = "USER Dani"+'\r'+'\n'
@@ -53,7 +53,7 @@ class Test(unittest.TestCase):
     
     def TestUserPassOk(self):
         self.clientSocket = socket.socket(AF_INET,SOCK_STREAM)
-        self.MyServer = MyChatServer(self.Dizionario,self.address , self.port+1)
+        self.MyServer = MyChatServer.MyChatServer(self.Dizionario,self.address , self.port+1)
         self.MyServer.start()
         self.clientSocket.connect((self.address , self.port+1))
         msg = "USER Dani"+'\r'+'\n'+"PASS ciao"+'\r'+'\n'
@@ -65,7 +65,7 @@ class Test(unittest.TestCase):
         pass
     def testBatch(self):
         self.clientSocket = socket.socket(AF_INET,SOCK_STREAM)
-        self.MyServer = MyChatServer(self.Dizionario,self.address , self.port+56)
+        self.MyServer = MyChatServer.MyChatServer(self.Dizionario,self.address , self.port+56)
         self.MyServer.start()
         self.clientSocket.connect((self.address , self.port+56))
         msg = "USER Dani"+'\r'+'\n'+"PAS"
@@ -80,7 +80,7 @@ class Test(unittest.TestCase):
     
     def TestUserPassNotOk(self):
         self.clientSocket = socket.socket(AF_INET,SOCK_STREAM)
-        self.MyServer = MyChatServer(self.Dizionario,self.address , self.port+2)
+        self.MyServer = MyChatServer.MyChatServer(self.Dizionario,self.address , self.port+2)
         self.MyServer.start()
         self.clientSocket.connect((self.address , self.port+2))
         msg = "USER Dani"+'\r'+'\n'+"PASS lol"+'\r'+'\n'
@@ -92,7 +92,7 @@ class Test(unittest.TestCase):
         pass
     def TestUserPassNotOkMessage(self):
         self.clientSocket = socket.socket(AF_INET,SOCK_STREAM)
-        self.MyServer = MyChatServer(self.Dizionario,self.address , self.port+3)
+        self.MyServer = MyChatServer.MyChatServer(self.Dizionario,self.address , self.port+3)
         self.MyServer.start()
         self.clientSocket.connect((self.address , self.port+3))
         msg = "USER Dani"+'\r'+'\n'+"PASS lol"+'\r'+'\n'+"MESSAGE 1 4 lol"+'\r'+'\n'+"ASDGAKHSDFG"+'\r'+'\n'+'.'+'\r'+'\n'+'\r'+'\n'
@@ -106,7 +106,7 @@ class Test(unittest.TestCase):
         pass
     def testLegalCommandNotLogin(self):
         self.clientSocket = socket.socket(AF_INET,SOCK_STREAM)
-        self.MyServer = MyChatServer(self.Dizionario,self.address , self.port+4)
+        self.MyServer = MyChatServer.MyChatServer(self.Dizionario,self.address , self.port+4)
         self.MyServer.start()
         self.clientSocket.connect((self.address , self.port+4))
         msg = "NEW CIAO"+'\r'+'\n'+"PASS ciao"+'\r'+'\n'
@@ -118,7 +118,7 @@ class Test(unittest.TestCase):
         pass
     def testNewTopic(self):
         self.clientSocket = socket.socket(AF_INET,SOCK_STREAM)
-        self.MyServer = MyChatServer(self.Dizionario,self.address , self.port+5)
+        self.MyServer = MyChatServer.MyChatServer(self.Dizionario,self.address , self.port+5)
         self.MyServer.beforeTest()
         self.MyServer.start()
         self.clientSocket.connect((self.address , self.port+5))
@@ -133,7 +133,7 @@ class Test(unittest.TestCase):
         pass
     def testTopicList(self):
         self.clientSocket = socket.socket(AF_INET,SOCK_STREAM)
-        self.MyServer = MyChatServer(self.Dizionario,self.address , self.port+11)
+        self.MyServer = MyChatServer.MyChatServer(self.Dizionario,self.address , self.port+11)
         self.MyServer.beforeTest()
         self.MyServer.start()
         self.clientSocket.connect((self.address , self.port+11))
@@ -150,7 +150,7 @@ class Test(unittest.TestCase):
     
     def testTopicListWrongSyntax(self):
         self.clientSocket = socket.socket(AF_INET,SOCK_STREAM)
-        self.MyServer = MyChatServer(self.Dizionario,self.address , self.port+26)
+        self.MyServer = MyChatServer.MyChatServer(self.Dizionario,self.address , self.port+26)
         self.MyServer.start()
         self.MyServer.beforeTest()
         self.clientSocket.connect((self.address , self.port+26))
@@ -166,7 +166,7 @@ class Test(unittest.TestCase):
         pass
     def testMessageNoTopic(self):
         self.clientSocket = socket.socket(AF_INET,SOCK_STREAM)
-        self.MyServer = MyChatServer(self.Dizionario,self.address , self.port+6)
+        self.MyServer = MyChatServer.MyChatServer(self.Dizionario,self.address , self.port+6)
         self.MyServer.beforeTest()
         self.MyServer.start()
         self.clientSocket.connect((self.address , self.port+6))
@@ -182,7 +182,7 @@ class Test(unittest.TestCase):
         pass
     def testMessage(self):
         self.clientSocket = socket.socket(AF_INET,SOCK_STREAM)
-        self.MyServer = MyChatServer(self.Dizionario,self.address , self.port+7)
+        self.MyServer = MyChatServer.MyChatServer(self.Dizionario,self.address , self.port+7)
         self.MyServer.beforeTest()
         self.MyServer.start()
         self.clientSocket.connect((self.address , self.port+7))
@@ -198,7 +198,7 @@ class Test(unittest.TestCase):
         pass
     def testPiuInserimenti(self):
         self.clientSocket = socket.socket(AF_INET,SOCK_STREAM)
-        self.MyServer = MyChatServer(self.Dizionario,self.address , self.port+8)
+        self.MyServer = MyChatServer.MyChatServer(self.Dizionario,self.address , self.port+8)
         self.MyServer.beforeTest()
         self.MyServer.start()
         self.clientSocket.connect((self.address , self.port+8))
@@ -215,7 +215,7 @@ class Test(unittest.TestCase):
         pass
     def testListTopicValidPresent(self):
         self.clientSocket = socket.socket(AF_INET,SOCK_STREAM)
-        self.MyServer = MyChatServer(self.Dizionario,self.address , self.port+14)
+        self.MyServer = MyChatServer.MyChatServer(self.Dizionario,self.address , self.port+14)
         self.MyServer.beforeTest()
         self.MyServer.start()
         self.clientSocket.connect((self.address , self.port+14))
@@ -233,7 +233,7 @@ class Test(unittest.TestCase):
         pass
     def testListTopicValidPresentMore(self):
         self.clientSocket = socket.socket(AF_INET,SOCK_STREAM)
-        self.MyServer = MyChatServer(self.Dizionario,self.address , self.port+9)
+        self.MyServer = MyChatServer.MyChatServer(self.Dizionario,self.address , self.port+9)
         self.MyServer.beforeTest()
         self.MyServer.start()
         self.clientSocket.connect((self.address , self.port+9))
@@ -252,7 +252,7 @@ class Test(unittest.TestCase):
     
     def testListTopicNotValidPresentMore(self):
         self.clientSocket = socket.socket(AF_INET,SOCK_STREAM)
-        self.MyServer = MyChatServer(self.Dizionario,self.address , self.port+10)
+        self.MyServer = MyChatServer.MyChatServer(self.Dizionario,self.address , self.port+10)
         self.MyServer.beforeTest()
         self.MyServer.start()
         self.clientSocket.connect((self.address , self.port+10))
@@ -270,7 +270,7 @@ class Test(unittest.TestCase):
         pass
     def testValidReply(self):
         self.clientSocket = socket.socket(AF_INET,SOCK_STREAM)
-        self.MyServer = MyChatServer(self.Dizionario,self.address , self.port+13)
+        self.MyServer = MyChatServer.MyChatServer(self.Dizionario,self.address , self.port+19)#13
         self.MyServer.beforeTest()
         self.MyServer.start()
         self.clientSocket.connect((self.address , self.port+13))
@@ -289,7 +289,7 @@ class Test(unittest.TestCase):
         pass
     def testInValidReply(self):
         self.clientSocket = socket.socket(AF_INET,SOCK_STREAM)
-        self.MyServer = MyChatServer(self.Dizionario,self.address , self.port+12)
+        self.MyServer = MyChatServer.MyChatServer(self.Dizionario,self.address , self.port+12)
         self.MyServer.beforeTest()
         self.MyServer.start()
         self.clientSocket.connect((self.address , self.port+12))
@@ -309,7 +309,7 @@ class Test(unittest.TestCase):
     
     def testConv(self):
         self.clientSocket = socket.socket(AF_INET,SOCK_STREAM)
-        self.MyServer = MyChatServer(self.Dizionario,self.address , self.port+15)
+        self.MyServer = MyChatServer.MyChatServer(self.Dizionario,self.address , self.port+15)
         self.MyServer.beforeTest()
         self.MyServer.start()
         self.clientSocket.connect((self.address , self.port+15))
@@ -331,7 +331,7 @@ class Test(unittest.TestCase):
     
     def testConvBase(self):
         self.clientSocket = socket.socket(AF_INET,SOCK_STREAM)
-        self.MyServer = MyChatServer(self.Dizionario,self.address , self.port+16)
+        self.MyServer = MyChatServer.MyChatServer(self.Dizionario,self.address , self.port+16)
         self.MyServer.beforeTest()
         self.MyServer.start()
         self.clientSocket.connect((self.address , self.port+16))
@@ -352,7 +352,7 @@ class Test(unittest.TestCase):
         pass
     def testConvUltimo(self):
         self.clientSocket = socket.socket(AF_INET,SOCK_STREAM)
-        self.MyServer = MyChatServer(self.Dizionario,self.address , self.port+17)
+        self.MyServer = MyChatServer.MyChatServer(self.Dizionario,self.address , self.port+17)
         self.MyServer.beforeTest()
         self.MyServer.start()
         self.clientSocket.connect((self.address , self.port+17))
@@ -373,7 +373,7 @@ class Test(unittest.TestCase):
         pass
     def testConvMoreReplySameLevel(self):
         self.clientSocket = socket.socket(AF_INET,SOCK_STREAM)
-        self.MyServer = MyChatServer(self.Dizionario,self.address , self.port+18)
+        self.MyServer = MyChatServer.MyChatServer(self.Dizionario,self.address , self.port+18)
         self.MyServer.beforeTest()
         self.MyServer.start()
         self.clientSocket.connect((self.address , self.port+18))
@@ -396,7 +396,7 @@ class Test(unittest.TestCase):
     
     def testGeneric(self):
         self.clientSocket = socket.socket(AF_INET,SOCK_STREAM)
-        self.MyServer = MyChatServer(self.Dizionario,self.address , self.port+19)
+        self.MyServer = MyChatServer.MyChatServer(self.Dizionario,self.address , self.port+19)
         self.MyServer.beforeTest()
         self.MyServer.start()
         self.clientSocket.connect((self.address , self.port+19))
@@ -418,7 +418,7 @@ class Test(unittest.TestCase):
         pass
     def testRegisterBase(self):
         self.clientSocket = socket.socket(AF_INET,SOCK_STREAM)
-        self.MyServer = MyChatServer(self.Dizionario,self.address , self.port+20)
+        self.MyServer = MyChatServer.MyChatServer(self.Dizionario,self.address , self.port+20)
         self.MyServer.beforeTest()
         self.MyServer.start()
         self.clientSocket.connect((self.address , self.port+20))
@@ -431,7 +431,7 @@ class Test(unittest.TestCase):
         self.assertEqual(data,"OK\r\nOK\r\nOK\r\n", data)
 #     def testRegisterBusy(self):
 #         self.clientSocket = socket.socket(AF_INET,SOCK_STREAM)
-#         self.MyServer = MyChatServer(self.Dizionario,self.address , self.port+21)
+#         self.MyServer = MyChatServer.MyChatServer(self.Dizionario,self.address , self.port+21)
 #         self.MyServer.beforeTest()
 #         self.MyServer.start()
 #         MyChatServer.registerHost["Dani"] = ("127.0.0.1" , 89)
@@ -447,7 +447,7 @@ class Test(unittest.TestCase):
     
 #     def testRegisterBusyAndReplace(self):
 #         self.clientSocket = socket.socket(AF_INET,SOCK_STREAM)
-#         self.MyServer = MyChatServer(self.Dizionario,self.address , self.port+22)
+#         self.MyServer = MyChatServer.MyChatServer(self.Dizionario,self.address , self.port+22)
 #         self.MyServer.beforeTest()
 #         self.MyServer.start()
 #         MyChatServer.registerHost["user1"] = ("127.0.0.1" , 89)
@@ -463,7 +463,7 @@ class Test(unittest.TestCase):
     
     def testUnRegisterBase(self):
         self.clientSocket = socket.socket(AF_INET,SOCK_STREAM)
-        self.MyServer = MyChatServer(self.Dizionario,self.address , self.port+23)
+        self.MyServer = MyChatServer.MyChatServer(self.Dizionario,self.address , self.port+23)
         self.MyServer.beforeTest()
         self.MyServer.start()
         #MyChatServer.registerHost["user1"] = ("127.0.0.1" , 89)
@@ -479,7 +479,7 @@ class Test(unittest.TestCase):
      
 #     def testUnRegisterNotRegistered(self):
 #         self.clientSocket = socket.socket(AF_INET,SOCK_STREAM)
-#         self.MyServer = MyChatServer(self.Dizionario,self.address , self.port+24)
+#         self.MyServer = MyChatServer.MyChatServer(self.Dizionario,self.address , self.port+24)
 #         self.MyServer.beforeTest()
 #         self.MyServer.start()
 #         MyChatServer.registerHost["dani"] = ("127.0.0.1" , 89)
@@ -495,7 +495,7 @@ class Test(unittest.TestCase):
     
     def testUnRegisterWrongSyntaxLegalDelete(self):
         self.clientSocket = socket.socket(AF_INET,SOCK_STREAM)
-        self.MyServer = MyChatServer(self.Dizionario,self.address , self.port+25)
+        self.MyServer = MyChatServer.MyChatServer(self.Dizionario,self.address , self.port+25)
         self.MyServer.beforeTest()
         self.MyServer.start()
         #MyChatServer.registerHost["user1"] = ("127.0.0.1" , 89)
@@ -511,7 +511,7 @@ class Test(unittest.TestCase):
     
     def testConvMoreThanEnought(self):
         self.clientSocket = socket.socket(AF_INET,SOCK_STREAM)
-        self.MyServer = MyChatServer(self.Dizionario,self.address , self.port+41)
+        self.MyServer = MyChatServer.MyChatServer(self.Dizionario,self.address , self.port+41)
         self.MyServer.beforeTest()
         self.MyServer.start()
         self.clientSocket.connect((self.address , self.port+41))
@@ -537,7 +537,7 @@ class Test(unittest.TestCase):
         self.clientSocket = []
         self.clientSocket.append(socket.socket(AF_INET,SOCK_STREAM))
         self.clientSocket.append(socket.socket(AF_INET,SOCK_STREAM))
-        self.MyServer = MyChatServer(self.Dizionario,self.address , self.port+131)
+        self.MyServer = MyChatServer.MyChatServer(self.Dizionario,self.address , self.port+131)
         self.MyServer.beforeTest()
         self.MyServer.start()
         self.clientSocket[0].connect((self.address , self.port+131))
@@ -558,7 +558,7 @@ class Test(unittest.TestCase):
         self.assertEqual(data0,"OK\r\nOK\r\nOK 0\r\nOK 1\r\nOK 0\r\n", data0)
         
     def testSubscribeRegister(self):
-        self.MyServer = MyChatServer(self.Dizionario,self.address , self.port+38)
+        self.MyServer = MyChatServer.MyChatServer(self.Dizionario,self.address , self.port+38)
         self.MyServer.beforeTest()
         self.MyServer.start()
         self.clientSocket = socket.socket(AF_INET,SOCK_STREAM)
@@ -575,7 +575,7 @@ class Test(unittest.TestCase):
         self.assertEqual(data,"OK\r\nOK\r\nOK 0\r\nOK 1\r\nOK\r\nOK\r\n", data)
       
     def testSubscribeNotRegister(self):
-        self.MyServer = MyChatServer(self.Dizionario,self.address , self.port+38)
+        self.MyServer = MyChatServer.MyChatServer(self.Dizionario,self.address , self.port+38)
         self.MyServer.beforeTest()
         self.MyServer.start()
         self.clientSocket = socket.socket(AF_INET,SOCK_STREAM)
@@ -591,7 +591,7 @@ class Test(unittest.TestCase):
         self.assertEqual(data,"OK\r\nOK\r\nOK 0\r\nOK 1\r\nKO\r\n", data)
       
 #     def testSubscribeRegisterTaken(self):
-#         self.MyServer = MyChatServer(self.Dizionario,self.address , self.port+40)
+#         self.MyServer = MyChatServer.MyChatServer(self.Dizionario,self.address , self.port+40)
 #         self.MyServer.beforeTest()
 #         self.MyServer.start()
 #         self.clientSocket = socket.socket(AF_INET,SOCK_STREAM)
@@ -609,7 +609,7 @@ class Test(unittest.TestCase):
 #         self.assertEqual(data,"OK\r\nOK\r\nOK 0\r\nOK 1\r\nKO\r\nKO\r\n", data) 
       
     def testUnSubscribeRegister(self):
-        self.MyServer = MyChatServer(self.Dizionario,self.address , self.port+39)
+        self.MyServer = MyChatServer.MyChatServer(self.Dizionario,self.address , self.port+39)
         self.MyServer.beforeTest()
         self.MyServer.start()
         self.clientSocket = socket.socket(AF_INET,SOCK_STREAM)
@@ -627,7 +627,7 @@ class Test(unittest.TestCase):
         self.assertEqual(data,"OK\r\nOK\r\nOK 0\r\nOK 1\r\nOK\r\nOK\r\nOK\r\n", data)
           
     def testRegisterSubscribeTopicUnsubscribe(self):
-        self.MyServer = MyChatServer(self.Dizionario,self.address , self.port+39)
+        self.MyServer = MyChatServer.MyChatServer(self.Dizionario,self.address , self.port+39)
         self.MyServer.beforeTest()
         self.MyServer.start()
         self.clientSocket = socket.socket(AF_INET,SOCK_STREAM)
@@ -646,7 +646,7 @@ class Test(unittest.TestCase):
         self.assertEqual(data,"OK\r\nOK\r\nOK 0\r\nOK 1\r\nOK\r\nOK\r\nTOPIC_LIST\r\n*0 CIAO\r\n1 ciao11\r\n\r\nOK\r\n", data)
            
     def testRegisterSubscribeTopicUnsubscribeTopic(self):
-        self.MyServer = MyChatServer(self.Dizionario,self.address , self.port+39)
+        self.MyServer = MyChatServer.MyChatServer(self.Dizionario,self.address , self.port+39)
         self.MyServer.beforeTest()
         self.MyServer.start()
         self.clientSocket = socket.socket(AF_INET,SOCK_STREAM)
@@ -666,7 +666,7 @@ class Test(unittest.TestCase):
         self.assertEqual(data,"OK\r\nOK\r\nOK 0\r\nOK 1\r\nOK\r\nOK\r\nTOPIC_LIST\r\n*0 CIAO\r\n1 ciao11\r\n\r\nOK\r\nTOPIC_LIST\r\n0 CIAO\r\n1 ciao11\r\n\r\n", data)
       
 #     def testUnSubscribeRegisterMessage(self):
-#         self.MyServer = MyChatServer(self.Dizionario,self.address , self.port+39)
+#         self.MyServer = MyChatServer.MyChatServer(self.Dizionario,self.address , self.port+39)
 #         self.MyServer.beforeTest()
 #         self.MyServer.start()
 #         self.clientSocket = socket.socket(AF_INET,SOCK_STREAM)
@@ -686,7 +686,7 @@ class Test(unittest.TestCase):
 #         self.assertEqual(data,"OK\r\nOK\r\nOK 0\r\nOK 1\r\nOK\r\nOK\r\nOK 0\r\nOK\r\n", data)
        
 #     def testSubscribeRegisterMessageUregisterAll(self):
-#         self.MyServer = MyChatServer(self.Dizionario,self.address , self.port+39)
+#         self.MyServer = MyChatServer.MyChatServer(self.Dizionario,self.address , self.port+39)
 #         self.MyServer.beforeTest()
 #         self.MyServer.start()
 #         self.clientSocket = socket.socket(AF_INET,SOCK_STREAM)
@@ -706,7 +706,7 @@ class Test(unittest.TestCase):
 #         self.clientSocket.close()
 #         self.assertEqual(data,"OK\r\nOK\r\nOK 0\r\nOK 1\r\nOK 2\r\nOK\r\nOK\r\nOK 0\r\nOK\r\n", data)
     def testUnsubscribeNotRegister(self):
-        self.MyServer = MyChatServer(self.Dizionario,self.address , self.port+38)
+        self.MyServer = MyChatServer.MyChatServer(self.Dizionario,self.address , self.port+38)
         self.MyServer.beforeTest()
         self.MyServer.start()
         self.clientSocket = socket.socket(AF_INET,SOCK_STREAM)
@@ -722,7 +722,7 @@ class Test(unittest.TestCase):
         self.assertEqual(data,"OK\r\nOK\r\nOK 0\r\nOK 1\r\nKO\r\n", data)
       
 #     def testUnSubscribeRegisterMessageUregisterAllRegisterAgainSuscribeAgain(self):
-#         self.MyServer = MyChatServer(self.Dizionario,self.address , self.port+39)
+#         self.MyServer = MyChatServer.MyChatServer(self.Dizionario,self.address , self.port+39)
 #         self.MyServer.beforeTest()
 #         self.MyServer.start()
 #         self.clientSocket = socket.socket(AF_INET,SOCK_STREAM)
@@ -746,7 +746,7 @@ class Test(unittest.TestCase):
 #     
        
     def testAllCommandNotLogin(self):
-        self.MyServer = MyChatServer(self.Dizionario,self.address , self.port+39)
+        self.MyServer = MyChatServer.MyChatServer(self.Dizionario,self.address , self.port+39)
         self.MyServer.beforeTest()
         self.MyServer.start()
         self.clientSocket = socket.socket(AF_INET,SOCK_STREAM)
@@ -768,7 +768,7 @@ class Test(unittest.TestCase):
         self.assertEqual(data,"KO\r\nKO\r\nKO\r\nKO\r\nKO\r\nKO\r\nKO\r\nKO\r\nKO\r\nKO\r\n", data)
     
     def testGiulio(self):
-        self.MyServer = MyChatServer(self.Dizionario,self.address , self.port+39)
+        self.MyServer = MyChatServer.MyChatServer(self.Dizionario,self.address , self.port+39)
         self.MyServer.beforeTest()
         self.MyServer.start()
         self.clientSocket = socket.socket(AF_INET,SOCK_STREAM)
