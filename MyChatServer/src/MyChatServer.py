@@ -5,7 +5,7 @@ Created on 03 nov 2016
 '''
 import threading
 from threading import * 
-#from threading import Condition 
+# from threading import Condition 
 import socket
 
 
@@ -27,18 +27,7 @@ class ClientHandler(Thread):
         self.userName = ""
         self.command = {
             "USER": self.user,
-            "PASS": self.password,
-            "NEW": self.topic,
-            "TOPICS": self.topic_list,
-            "MESSAGE": self.message,
-            "LIST": self.msgList,
-            "REPLY": self.msgReply,
-            "CONV": self.conv,
-            "GET": self.getMsg,
-            "REGISTER": self.register,
-            "UNREGISTER": self.unregister,
-            "SUBSCRIBE": self.subscribe,
-            "UNSUBSCRIBE": self.unsubscribe
+            "PASS": self.password
         }
         self.autobreak = 0
         self.login = 0
@@ -71,9 +60,8 @@ class ClientHandler(Thread):
             # if not self.sock.is_alive():    
             self.sock.close()
             self.autobreak = 1 
-    def subscribe(self,param):
-        if self.login:
-            try:
+    def subscribe(self, param):
+          try:
                 registered = MyChatServer.registerHost[self.userAttempt]
                 print len(param)
                 for k in range(len(param)):
@@ -85,10 +73,11 @@ class ClientHandler(Thread):
                 for k in range(len(param)):
                     try:
                         userList = MyChatServer.subscribed[param[k]]
-                        if not self.userAttempt in userList:
+                         if not self.userAttempt in userList:
+                            
                             userList.append(self.userAttempt)
-                            #print "printo userlist \r\n"
-                            #print userList
+                            # print "printo userlist \r\n"
+                            # print userList
                             MyChatServer.subscribed[param[k]] = userList
                    
     #                     userList = MyChatServer.subscribed[param[k]]
@@ -98,16 +87,14 @@ class ClientHandler(Thread):
                         userList = []
                         userList.append(self.userAttempt)
                         MyChatServer.subscribed[param[k]] = userList
-                    #print userList
-                    #print "\r\n"
-                    #print MyChatServer.subscribed       
+                    # print userList
+                    # print "\r\n"
+                    # print MyChatServer.subscribed       
             self.__sendMessage("OK" + '\r' + '\n')   
-        else:
-            self.__sendMessage("KO" + '\r' + '\n')     
+        
         pass
-    def unsubscribe(self,param):
-        if self.login:
-            failure = False
+    def unsubscribe(self, param):
+        failure = False
             try:
                 registered = MyChatServer.registerHost[self.userAttempt]
                 for k in range(len(param)):
@@ -127,13 +114,12 @@ class ClientHandler(Thread):
                             del MyChatServer.subscribed[param[k]]
                     except:
                         failure = True
-                        #print"fail remove subscrive..."
+                        # print"fail remove subscrive..."
     #                 print userList
     #                 print "\r\n"
     #                 print MyChatServer.subscribed       
             self.__sendMessage("OK" + '\r' + '\n') 
-        else:
-            self.__sendMessage("KO" + '\r' + '\n')       
+               
         pass
         
     def run(self):
@@ -165,8 +151,19 @@ class ClientHandler(Thread):
                 if self.Dizionario[user] == param[0]:
                     self.__sendMessage("OK" + '\r' + '\n')
                     self.login = 1
-                    del self.command['USER']
-                    del self.command['PASS']
+                    self.command = {
+                        "NEW": self.topic,
+                        "TOPICS": self.topic_list,
+                        "MESSAGE": self.message,
+                        "LIST": self.msgList,
+                        "REPLY": self.msgReply,
+                        "CONV": self.conv,
+                        "GET": self.getMsg,
+                        "REGISTER": self.register,
+                        "UNREGISTER": self.unregister,
+                        "SUBSCRIBE": self.subscribe,
+                        "UNSUBSCRIBE": self.unsubscribe
+                    }
                     # self.command = self.command[1:] #login non e piu un comando possibile quindi lo rimuovo dall'elenco.  #cosi facendo ho automatico anche la gestione dell'errore nel caso l'utente provasse a reinviare il comando login 
                 else:
                     self.loginAttempt = 0
@@ -179,16 +176,12 @@ class ClientHandler(Thread):
             self.__sendMessage("KO" + '\r' + '\n')       
     def topic(self, param):
         # print param
-        if self.login:
-            with self.lock:
+        with self.lock:
                 topicIndex = MyChatServer.MyChatServerAddTopic(param[0])
                 self.__sendMessage("OK " + str(topicIndex) + '\r' + '\n')
                 self.lock.notify_all()
-        else:
-            self.__sendMessage("KO" + '\r' + '\n')    
     def topic_list(self, param):
-        if self.login:
-            if not len(param)>0:
+        if not len(param) > 0:
                 str1 = "TOPIC_LIST\r\n"
                 if self.login:
                     with self.lock:
@@ -200,28 +193,25 @@ class ClientHandler(Thread):
                                     checked = "*"
                             except:
                                 print""
-                            str1 = str1 +checked + str(i) + " " + MyChatServer.topicList[i] + "\r\n"
+                            str1 = str1 + checked + str(i) + " " + MyChatServer.topicList[i] + "\r\n"
                     str1 = str1 + "\r\n"
-                    #print str1
+                    # print str1
                     
                     self.__sendMessage(str1)
                 else:
                     self.__sendMessage("KO" + '\r' + '\n')
             else:
                 self.__sendMessage("KO" + '\r' + '\n')
-        else:
-                self.__sendMessage("KO" + '\r' + '\n')        
-            # self.lock.notify_all()
+        
      
-    def register(self,param):
-        if self.login:
-            occupato = False
-            coppia = (param[0],int(param[1]))
+    def register(self, param):
+        occupato = False
+            coppia = (param[0], int(param[1]))
             with self.lock:
                 for key, value in MyChatServer.registerHost.iteritems():
-                #for i in range(len(MyChatServer.registerHost)):
+                # for i in range(len(MyChatServer.registerHost)):
                     coppiaLocal = value
-                    if coppiaLocal==coppia:
+                    if coppiaLocal == coppia:
                         try:
                             MyChatServer.registerHost[self.userAttempt]
                         except:
@@ -231,13 +221,11 @@ class ClientHandler(Thread):
             if occupato:
                 self.__sendMessage("KO" + '\r' + '\n')
             else:          
-                MyChatServer.registerHost[self.userAttempt]=(param[0],int(param[1]))
+                MyChatServer.registerHost[self.userAttempt] = (param[0], int(param[1]))
                 self.__sendMessage("OK" + '\r' + '\n')
-        else:
-            self.__sendMessage("KO" + '\r' + '\n')
-    def unregister(self,param):
-        if self.login:
-            if not len(param)>0:
+        
+    def unregister(self, param):
+        if not len(param) > 0:
                 try:
                     with self.lock:
                         registerHostProvv = MyChatServer.registerHost[self.userAttempt]
@@ -248,22 +236,22 @@ class ClientHandler(Thread):
                 #################### INIZIO UNSUBSCRIBE ######################
                 failure = False
                 try:
-                    #registered = registerHostProvv
+                    # registered = registerHostProvv
                     with self.lock:
-                        #param = [i for i in range(len(MyChatServer.topicList))]
+                        # param = [i for i in range(len(MyChatServer.topicList))]
                         for k in range(len(MyChatServer.topicList)):
                             try:
                                 userList = MyChatServer.subscribed[str(k)]
                                 for i in range(len(userList)):
                                     if userList[i] == self.userAttempt:
-                                        #print "cancello..." + userList[i]
+                                        # print "cancello..." + userList[i]
                                         del userList[i]
                                 MyChatServer.subscribed[str(k)] = userList
                                 if len(userList) == 0:
                                     del MyChatServer.subscribed[str(k)]
                             except:
                                 failure = True
-                                #print"fail remove subscrive..."
+                                # print"fail remove subscrive..."
                 except:
                     print ""                
                 ######################FINE UNSUBSCRIBE ##########################
@@ -271,12 +259,10 @@ class ClientHandler(Thread):
                 self.__sendMessage("OK" + '\r' + '\n')
             else:
                 self.__sendMessage("KO" + '\r' + '\n')
-        else:
-            self.__sendMessage("KO" + '\r' + '\n')        
+              
         
     def getMsg(self, param):
-        if self.login:
-            if len(param) > 1:
+        if len(param) > 1:
                 self.__sendMessage("KO" + '\r' + '\n')
                 exit()
             IDmsg = param[0]
@@ -290,8 +276,7 @@ class ClientHandler(Thread):
             listOfTopic = " ".join(listOfTopic)
             response = "MESSAGE " + IDmsg + "\r\n" + "TOPICS " + listOfTopic + "\r\n" + text + "\r\n" + ".\r\n\r\n"
             self.__sendMessage(response)
-        else:
-            self.__sendMessage("KO" + '\r' + '\n')      
+             
     def message(self, param):
         data = ""
         escape_sequence = '\r' + '\n' + "." + '\r' + '\n' + '\r' + '\n'
@@ -300,14 +285,13 @@ class ClientHandler(Thread):
             data2 = data[-5:]
             if(self.autobreak or data[-7:] == escape_sequence):
                 break
-        if self.login:
-            msgId =""        
+            msgId = ""        
             with self.lock:
                 topicExists = True
                 for i in range(len(param)):
                     try:
-                        #print "provo param di i:"
-                        #print param[i]
+                        # print "provo param di i:"
+                        # print param[i]
                         MyChatServer.topicList[int(param[int(i)])]
                     except:
                         topicExists = False
@@ -321,9 +305,9 @@ class ClientHandler(Thread):
                 else:
                     self.__sendMessage("KO" + '\r' + '\n')
             with self.lock:
-                #per ogni topic ricevuto nel messaggio
-                msg = "MESSAGE "+str(msgId)+"\r\n"+"TOPICS "+" ".join(param)+"\r\n"+data+"\r\n.\r\n\r\n"
-                #print msg
+                # per ogni topic ricevuto nel messaggio
+                msg = "MESSAGE " + str(msgId) + "\r\n" + "TOPICS " + " ".join(param) + "\r\n" + data + "\r\n.\r\n\r\n"
+                # print msg
                 for i in range(len(param)):
                     try:
                         userSubscribedList = MyChatServer.subscribed[param[i]]
@@ -331,26 +315,24 @@ class ClientHandler(Thread):
                             userSubscribed = userSubscribedList[k]
                             host = MyChatServer.registerHost[userSubscribed][0]
                             Port = MyChatServer.registerHost[userSubscribed][1]
-                            #print(userSubscribed)
-                            clientSocket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-                            clientSocket.connect((host,Port))
+                            # print(userSubscribed)
+                            clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                            clientSocket.connect((host, Port))
                             clientSocket.send(msg)
                             clientSocket.close()
                     except:
                         print""
-        else:
-            self.__sendMessage("KO" + '\r' + '\n')
     def msgList(self, param):
-        if self.login:
+        
             msgID = param[0]
             param = param[1:]
             Response = "MESSAGES\r\n"
-            if self.login:
+            
                 with self.lock:
                     topicExists = True
                     for i in range(len(param)):
                         try:
-                            #print "provo param di i:"
+                            # print "provo param di i:"
                             print param[i]
                             MyChatServer.topicList[int(param[int(i)])]
                         except:
@@ -370,14 +352,11 @@ class ClientHandler(Thread):
                             else:
                                 Response = Response + str(i) + " " + " ".join(listOfTopic) + "\r\n"
                         Response = Response + "\r\n"
-                        #print Response
+                        # print Response
                         self.__sendMessage(Response)
                     else:
                         self.__sendMessage("KO" + '\r' + '\n')
-            else:
-                self.__sendMessage("KO" + '\r' + '\n')
-        else:
-                self.__sendMessage("KO" + '\r' + '\n')        
+            
     def msgReply(self, param):
         
         msgID = param[0]
@@ -388,12 +367,12 @@ class ClientHandler(Thread):
             data2 = data[-5:]
             if(self.autobreak or data[-7:] == escape_sequence):
                 break
-        if self.login and len(param) == 1:
+        if len(param) == 1:
             msgExists = True
             with self.lock:
                 try:
-                    #print "provo message di i:"
-                    #print param[0]
+                    # print "provo message di i:"
+                    # print param[0]
                     topicListFather = MyChatServer.message[int(param[0])][1]
                 except:
                     msgExists = False
@@ -411,7 +390,6 @@ class ClientHandler(Thread):
             self.__sendMessage("KO" + '\r' + '\n')
             
     def conv(self, param):
-        if self.login:
             msgID = param[0]
             listRep = []
             hasReply = True
@@ -419,7 +397,7 @@ class ClientHandler(Thread):
                 try:
                     # se fallisce questo try non e un messaggio valido quindi termino
                     topicFatherList = MyChatServer.message[int(msgID)][1]
-                    #print topicFatherList
+                    # print topicFatherList
                 except:
                     self.__sendMessage("KO" + '\r' + '\n')
                     exit()
@@ -441,31 +419,29 @@ class ClientHandler(Thread):
                 # print response
                 response = response + "\r\n"
             self.__sendMessage(response)
-        else:
-            self.__sendMessage("KO" + '\r' + '\n')
     def __Dig(self, base):
-        #print base
+        # print base
         lista = []
         try:
             lista = MyChatServer.reply[base]
         except:
             return ""
-        #print MyChatServer.reply
-        #print lista
+        # print MyChatServer.reply
+        # print lista
         for i in range(len(lista)):
             listaT = self.__Dig(str(lista[i]))
             for k in range(len(listaT)):
                 lista.append(listaT[k])
         return lista
     def __DigUp(self, base):
-        #print base
+        # print base
         lista = []
         try:
             lista.append(MyChatServer.replyFather[base])
         except:
             return ""
-        #print MyChatServer.reply
-        #print lista
+        # print MyChatServer.reply
+        # print lista
         listaT = self.__DigUp(lista[0])
         for k in range(len(listaT)):
             lista.append(listaT[k])
@@ -479,7 +455,7 @@ class MyChatServer(Thread):
     registerHost = {}
     subscribed = {}
     def __init__(self, Dizionario, Host, Port):
-        Thread.__init__(self)    #implementato per i test con pyUnit
+        Thread.__init__(self)  # implementato per i test con pyUnit
         
         self.Dizionario = Dizionario
         self.Host = Host
@@ -495,14 +471,14 @@ class MyChatServer(Thread):
     def MyChatServerAddTopic(self, name):
         MyChatServer.topicList.append(name)
         topicIndex = len(MyChatServer.topicList) - 1
-        #print MyChatServer.topicList
+        # print MyChatServer.topicList
         return topicIndex
     @classmethod
     def MyChatServerAddMessage(self, msg, param):
         MyChatServer.message.append([msg])
         msgIndex = len(MyChatServer.message) - 1
         MyChatServer.message[msgIndex].append(param)
-        #print MyChatServer.message
+        # print MyChatServer.message
         return msgIndex
     @classmethod
     def MyChatServerAddReply(self, repId, msgId):
@@ -512,14 +488,14 @@ class MyChatServer(Thread):
         except:
             print""
         listApp.append(str(repId))
-        #print listApp
-        #print"ecco invece il msgid {}".format(msgId)
+        # print listApp
+        # print"ecco invece il msgid {}".format(msgId)
         MyChatServer.reply[msgId] = listApp
         MyChatServer.replyFather[str(repId)] = str(msgId)
         nReply = len(MyChatServer.reply[msgId]) - 1
 #         msgIndex = len(MyChatServer.message)-1
 #         MyChatServer.message[msgIndex].append(param)
-        #print MyChatServer.reply
+        # print MyChatServer.reply
         
         return nReply
     @classmethod
@@ -531,7 +507,7 @@ class MyChatServer(Thread):
         self.registerHost = {}
         self.subscribed = {}
     
-    def run(self):        #implementato per i test con pyunit
+    def run(self):  # implementato per i test con pyunit
         self.start1()  
     def start1(self):
         gestore = []
@@ -540,16 +516,16 @@ class MyChatServer(Thread):
                 connectionSocket, addr = self.serverSocket.accept()
                 print "nuova connessione"
                 gestore.append(ClientHandler(connectionSocket, self.Dizionario, self.lock))
-                gestore[len(gestore)-1].start()
+                gestore[len(gestore) - 1].start()
             except Exception as e:
                 print e
 #             MyChatServer.topicList = []
 #             MyChatServer.message = []
 #             MyChatServer.reply = {}
 #             MyChatServer.replyFather = {}
-        #for i in range(len(gestore)):
-            #gestore[i].join()  
-            #connectionSocket.close()
+        # for i in range(len(gestore)):
+            # gestore[i].join()  
+            # connectionSocket.close()
 # Dizionario = {
 #     "Dani": "ciao",
 #     "user1": "pass1",
