@@ -495,7 +495,7 @@ class MyChatServer(Thread):
         nReply = len(MyChatServer.reply[msgId]) - 1
 #         msgIndex = len(MyChatServer.message)-1
 #         MyChatServer.message[msgIndex].append(param)
-        # print MyChatServer.reply
+          print MyChatServer.reply
         
         return nReply
     @classmethod
